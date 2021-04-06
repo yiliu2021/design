@@ -39,9 +39,8 @@ class Ui_logoin(QWidget):
                 elif sqlpassword[0]==recpassword:
                     data_str = recusername
                     self.Signal_parp.emit(data_str)
+                    #myset.show()
                     self.close()
-                    myset.show()
-                    print('欢迎您，' + recusername + '!')
                 else:
                     QMessageBox.warning(self,
                                         "警告",

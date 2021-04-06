@@ -11,12 +11,13 @@ class Ui_userset(QWidget):
         super().__init__()
         self.setupUi(self)
         self.retranslateUi(self)
+        #self.setWindowFlags(Qt.WindowStaysOnTopHint)
         global logoinuser
         logoinuser=''
 
-    def deal_emit_slot(self, datastr):
+    def deal_emit_slot(self, name):
         global logoinuser
-        logoinuser=datastr
+        logoinuser=name
         self.welcome.setText(QtCore.QCoreApplication.translate("userset","<html><head/><body><p align=\"center\">" + logoinuser + "，你好！</p></body></html>"))
 
     def setupUi(self, userset):

@@ -73,7 +73,7 @@ def Loaddata():
     try:
         data = {'user': 'admin', 'password': 'admin'}
         table = 'users'
-        keys = ', '.join(data.keys())
+        keys =   ', '.join(data.keys())
         values = ', '.join(['%s'] * len(data))
         # 整合成sql语句
         insert_sql = 'INSERT INTO {table}({keys}) VALUES ({values}) '.format(table=table, keys=keys, values=values)
@@ -97,4 +97,4 @@ if __name__ == '__main__':
 #cur.execute('select * from users where user="admin";')
 #print(cur.fetchone())
 #sql = "SELECT * FROM EMPLOYEE WHERE INCOME > '%d'" % (1000)
-print ('*'*40)
+    print ('*'*40)
