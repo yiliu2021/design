@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 import qtawesome
+from mysqlfunction import *
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -213,12 +214,12 @@ class MainWindow(QMainWindow):
         self.setCursor(QCursor(Qt.ArrowCursor))
 
 if __name__ == '__main__':
-    # 初始化app,每一个pyqt程序中都需要有一个QApplication对象,sys.argv是一个命令行参数列表
+    try:
+        Loaddata()
+        print('successful')
+    except:
+        print('加载失败')
     app = QtWidgets.QApplication(sys.argv)
-    # 创建主窗口,实例化窗口,基类是QMainWindow。
     window = MainWindow()
-    #window.ui.set.clicked.connect(setwin.handle_click)
-    #窗口显示
     window.show()
-    # 进入程序的主循环，遇到退出情况，终止程序
     sys.exit(app.exec_())

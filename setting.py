@@ -1,35 +1,24 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'setting.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-
 from PyQt5.QtWidgets import *
-#from logoin import Ui_logoin
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 global logoinuser
+
+
 class Ui_userset(QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.retranslateUi(self)
         global logoinuser
-        logoinuser=' '
-        self.welcome.setText(QtCore.QCoreApplication.translate("userset", "<html><head/><body><p align=\"center\">"+logoinuser+"你好！</p></body></html>"))
+        logoinuser=''
 
     def deal_emit_slot(self, datastr):
         global logoinuser
         logoinuser=datastr
         self.welcome.setText(QtCore.QCoreApplication.translate("userset","<html><head/><body><p align=\"center\">" + logoinuser + "，你好！</p></body></html>"))
-        print(logoinuser+'你好啊呵呵')
+
     def setupUi(self, userset):
         userset.setObjectName("userset")
         userset.resize(720, 564)
@@ -62,6 +51,7 @@ class Ui_userset(QWidget):
         self.inputin = QtWidgets.QRadioButton(self.insert)
         self.inputin.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,255);color: rgba(0, 0, 0,254);border-style:none;border-width:0px;border-radius:8px;font:18px \"宋体\";font-style:normal;font-weight: lighter;text-decoration:blink;")
         self.inputin.setObjectName("inputin")
+        self.inputin.setChecked(True)
         self.horizontalLayout.addWidget(self.inputin)
         self.inputout = QtWidgets.QRadioButton(self.insert)
         self.inputout.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,255);color: rgba(0, 0, 0,254);border-style:none;border-width:0px;border-radius:8px;font:18px \"宋体\";font-style:normal;font-weight: lighter;text-decoration:blink;")
@@ -206,7 +196,8 @@ class Ui_userset(QWidget):
         self.editin = QtWidgets.QRadioButton(self.update)
         self.editin.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.editin.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,255);color: rgba(0, 0, 0,254);border-style:none;border-width:0px;border-radius:8px;font:18px \"宋体\";font-style:normal;font-weight: lighter;text-decoration:blink;")
-        self.editin.setAutoExclusive(False)
+        self.editin.setAutoExclusive(True)
+        self.editin.setChecked(True)
         self.editin.setObjectName("editin")
         self.horizontalLayout_9.addWidget(self.editin)
         self.editout = QtWidgets.QRadioButton(self.update)
@@ -696,7 +687,6 @@ class Ui_userset(QWidget):
         self.xiu_4.setText(_translate("userset", "2.批准对应编号人员外出。"))
         self.label_4.setText(_translate("userset", "3.可查看当日所有外出人员。"))
         self.setting.setTabText(self.setting.indexOf(self.leave), _translate("userset", "外出请假"))
-        #self.welcome.setText(_translate("userset", "<html><head/><body><p align=\"center\">admin，你好！</p></body></html>"))
         self.label_5.setText(_translate("userset", "请输入原密码："))
         self.label_6.setText(_translate("userset", "请输入新密码："))
         self.label_7.setText(_translate("userset", "再次确认密码："))
@@ -716,16 +706,6 @@ class Ui_userset(QWidget):
         self.setting.setTabText(self.setting.indexOf(self.adduser), _translate("userset", "账户编辑"))
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    #logoui = Ui_logoin()
-
-    #logoui.show()
-    username='lgx'
-    myset = Ui_userset(username)
+    myset = Ui_userset()
     myset.showMaximized()  # 最大化显示
     sys.exit(app.exec_())
-
-    #ui = Ui_userset()
-    #窗口显示
-    #ui.show()
-    # 进入程序的主循环，遇到退出情况，终止程序
-    #sys.exit(app.exec_())

@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from setting import Ui_userset
 import sys
+import pymysql
 
 class Ui_logoin(QWidget):
     Signal_parp = pyqtSignal(str)
@@ -11,27 +12,48 @@ class Ui_logoin(QWidget):
         super().__init__()
         self.setupUi(self)
         self.retranslateUi(self)
-        self.sysUserName = "1"  # 登录账号
-        self.sysPassword = "1"  # 登录密码
 
     @pyqtSlot()
     def on_yes_clicked(self):
         recusername = self.lineEdit.text()
         recpassword = self.lineEdit_2.text()
-
-        if (recusername == self.sysUserName) and (recpassword == self.sysPassword):
-            data_str=recusername
-            self.Signal_parp.emit(data_str)
-            self.close()
-            myset.show()
-            print('欢迎您，'+recusername+'!')
-        else:
+        if (recusername == '') or (recpassword == ''):
             QMessageBox.warning(self,
-                                "警告",
-                                "用户名不存在或密码错误！",
-                                QMessageBox.Yes)
-            self.lineEdit.setFocus()
-
+                                    "警告",
+                                    "用户名和密码不得为空！",
+                                    QMessageBox.Yes)
+        else:
+            try:
+                face = pymysql.connect(host='localhost', user='root', password='lgx', port=3306, db='face')
+                cur = face.cursor()
+                sql = "select password from users where user='%s'"%(recusername)
+                cur.execute(sql)
+                sqlpassword = cur.fetchone()
+                face.close()
+                if sqlpassword==None:
+                    QMessageBox.warning(self,
+                                        "警告",
+                                        "用户不存在！",
+                                        QMessageBox.Yes)
+                    self.lineEdit.setFocus()
+                elif sqlpassword[0]==recpassword:
+                    data_str = recusername
+                    self.Signal_parp.emit(data_str)
+                    self.close()
+                    myset.show()
+                    print('欢迎您，' + recusername + '!')
+                else:
+                    QMessageBox.warning(self,
+                                        "警告",
+                                        "密码错误！",
+                                        QMessageBox.Yes)
+                    self.lineEdit.setFocus()
+            except:
+                QMessageBox.warning(self,
+                                    "警告",
+                                    "数据连接失败，请设置数据库！",
+                                    QMessageBox.Yes)
+                self.lineEdit.setFocus()
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
