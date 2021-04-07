@@ -61,6 +61,14 @@ def Loaddata():
                                     other VARCHAR(255),
                                     PRIMARY KEY (number))"""
     cur.execute(comeintable_sql)
+    gooutpersontable_sql = """CREATE TABLE IF NOT EXISTS goout (
+                                            number VARCHAR(30) NOT NULL, 
+                                            name VARCHAR(10) NOT NULL, 
+                                            sex VARCHAR(2) NOT NULL,
+                                            date VARCHAR(20) NOT NULL,
+                                            other VARCHAR(255),
+                                            PRIMARY KEY (number))"""
+    cur.execute(gooutpersontable_sql)
     goouttable_sql = """CREATE TABLE IF NOT EXISTS goout (
                                         number VARCHAR(30) NOT NULL, 
                                         name VARCHAR(10) NOT NULL, 

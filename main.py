@@ -7,7 +7,7 @@ import qtawesome
 from mysqlfunction import *
 from warnning import Ui_warn
 from logoin import Ui_logoin
-from setting import Ui_userset
+from setmodule.setting import set_mod
 
 
 class Ui_Form(QWidget):
@@ -16,7 +16,7 @@ class Ui_Form(QWidget):
         super().__init__()
         self.setupUi(self)
         self.retranslateUi(self)
-        self.ui=Ui_userset()
+        self.setting=set_mod()
         self.logo=Ui_logoin()
         self.logo.Signal_parp.connect(self.tosetting)
         self.setbutton.clicked.connect(self.logoinstart)
@@ -26,7 +26,7 @@ class Ui_Form(QWidget):
         timer = QTimer(self)
         timer.timeout.connect(self.showTimeText)
         timer.start()
-        self.setusername.connect(self.ui.deal_emit_slot)
+        self.setusername.connect(self.setting.deal_emit_slot)
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -203,8 +203,8 @@ class Ui_Form(QWidget):
 
     def tosetting(self,user):
         self.setusername.emit(user)
-        self.ui.setWindowModality(Qt.ApplicationModal)
-        self.ui.show()
+        self.setting.setWindowModality(Qt.ApplicationModal)
+        self.setting.show()
 
     def showTimeText(self):
         # 设置宽度
