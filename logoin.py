@@ -2,9 +2,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from setting import Ui_userset
 import sys
 import pymysql
+from setmodule.setting import set_mod
 
 class Ui_logoin(QWidget):
     Signal_parp = pyqtSignal(str)
@@ -147,7 +147,7 @@ class Ui_logoin(QWidget):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_logoin()
-    myset = Ui_userset()
+    myset = set_mod()
     ui.show()
     ui.Signal_parp.connect(myset.deal_emit_slot)
     sys.exit(app.exec_())

@@ -9,7 +9,7 @@ from warnning import Ui_warn
 from logoin import Ui_logoin
 from setmodule.setting import set_mod
 
-
+#考虑主程序、登录界面、提示框不涉及功能执行，这三个文件界面和功能通过单独一个类实现
 class Ui_Form(QWidget):
     setusername = pyqtSignal(str)
     def __init__(self):
@@ -189,7 +189,7 @@ class Ui_Form(QWidget):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "智慧营区"))
         self.set_2.setText(_translate("Form", "系统设置"))
         self.checkingin_2.setText(_translate("Form", "考勤"))
         self.entrance_2.setText(_translate("Form", "进入门禁"))

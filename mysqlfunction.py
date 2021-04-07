@@ -61,7 +61,7 @@ def Loaddata():
                                     other VARCHAR(255),
                                     PRIMARY KEY (number))"""
     cur.execute(comeintable_sql)
-    gooutpersontable_sql = """CREATE TABLE IF NOT EXISTS goout (
+    gooutpersontable_sql = """CREATE TABLE IF NOT EXISTS gooutperson (
                                             number VARCHAR(30) NOT NULL, 
                                             name VARCHAR(10) NOT NULL, 
                                             sex VARCHAR(2) NOT NULL,
@@ -81,7 +81,7 @@ def Loaddata():
     try:
         data = {'user': 'admin', 'password': 'admin'}
         table = 'users'
-        keys =   ', '.join(data.keys())
+        keys = ', '.join(data.keys())
         values = ', '.join(['%s'] * len(data))
         # 整合成sql语句
         insert_sql = 'INSERT INTO {table}({keys}) VALUES ({values}) '.format(table=table, keys=keys, values=values)
