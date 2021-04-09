@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 import qtawesome
-from mysqlfunction import *
+from mysqlload import *
 from warnning import Ui_warn
 from logoin import Ui_logoin
 from setmodule.setting import set_mod

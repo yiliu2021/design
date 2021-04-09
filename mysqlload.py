@@ -1,15 +1,19 @@
-
 import pymysql
 
-
+def connectsql():
+    face = pymysql.connect(host='localhost', user='root', password='lgx', port=3306, db='face')
+    cur = face.cursor()
+    return(face,cur)
+def closesql(face,cur):
+    cur.close()
+    face.close()
 def Loaddata():
     db = pymysql.connect(host='localhost', user='root', password='lgx', port=3306)
     cursor = db.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS face")
     cursor.close()
     db.close()
-    face = pymysql.connect(host='localhost', user='root', password='lgx', port=3306, db='face')
-    cur = face.cursor()
+    face,cur=connectsql()
     usertable_sql = """CREATE TABLE IF NOT EXISTS users (
                     user VARCHAR(20) NOT NULL, 
                     password VARCHAR(20) NOT NULL, 
@@ -89,7 +93,8 @@ def Loaddata():
             face.commit()
     except:
         face.rollback()
-    face.close()
+    closesql(face, cur)
+
 
 if __name__ == '__main__':
     Loaddata()

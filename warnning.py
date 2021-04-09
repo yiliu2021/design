@@ -36,9 +36,9 @@ class Ui_warn(QWidget):
 
     def setupUi(self, warn):
         warn.setObjectName("warn")
-        warn.resize(292, 145)
+        warn.resize(300, 150)
         self.label = QtWidgets.QLabel(warn)
-        self.label.setGeometry(QtCore.QRect(40, 40, 201, 41))
+        self.label.setGeometry(QtCore.QRect(30, 30, 240, 90))
         self.label.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,255);color: rgba(0, 0, 0,254);border-style:none;border-width:0px;border-radius:8px;font:20px \"华文中宋\";font-style:normal;font-weight: lighter;text-decoration:blink;")
         self.label.setObjectName("label")
 

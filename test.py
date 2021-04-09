@@ -44,3 +44,21 @@ sql="""CREATE TABLE IF NOT EXISTS `user` (
 	  `age` int(11) NOT NULL,
 	  PRIMARY KEY (`id`)
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0"""
+        #self.ui.editin.toggled.connect(lambda: self.btnstate(self.ui.editin))
+        #self.ui.editout.toggled.connect(lambda: self.btnstate(self.ui.editout))
+        self.ui.commit.clicked.connect(self.radiostate)
+    def radiostate(self):
+        print(self.ui.editin.isChecked())
+        print(self.ui.editout.isChecked())
+
+    def btnstate(self, btn):
+        # 输出按钮1与按钮2的状态，选中还是没选中
+        if btn.isChecked() == True:
+            a='被选中'
+        else:
+            a='未选中'
+        print(btn.text()+a)
+        QMessageBox.warning(self,
+                            "警告",
+                            "用户名和密码不得为空！",
+                            QMessageBox.Yes)
