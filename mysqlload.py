@@ -94,6 +94,13 @@ def Loaddata():
     except:
         face.rollback()
     closesql(face, cur)
+def whether_or_not(table,key,value):
+    face, cur = connectsql()
+    sel_sql = "select count(*) from %s where %s = '%s'" % (table,key,value)
+    cur.execute(sel_sql)
+    count = cur.fetchone()
+    closesql(face, cur)
+    return count[0]
 
 
 if __name__ == '__main__':

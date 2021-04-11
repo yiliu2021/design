@@ -7,7 +7,9 @@ import qtawesome
 from mysqlload import *
 from warnning import Ui_warn
 from logoin import Ui_logoin
-from setmodule.setting import set_mod
+
+sys.path.append('setmodule\\')
+from setting import set_mod
 
 #考虑主程序、登录界面、提示框不涉及功能执行，这三个文件界面和功能通过单独一个类实现
 class Ui_Form(QWidget):

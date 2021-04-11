@@ -1,16 +1,29 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
+#from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QInputDialog
+#from PyQt5.QtGui import *
+from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtCore import *
+#from PyQt5.QtCore import QTimer, QDateTime, QCoreApplication, QThread
+import cv2, imutils
 import pymysql
-import sys
 global logoinuser
 #设置模块在独立于主程序的文件夹，为确保主程序引入不出错误，独立模块文件夹内相互引用宜加上文件夹名称
 from setmodule.setting_ui import Ui_userset
-import sys
+import sys,os
 sys.path.append('../')
 from warnning import Ui_warn
 from mysqlload import *
+import threading
+# 导入人脸识别检测包
+from imutils.video import VideoStream
+import numpy as np
+import pickle
+# 导入眨眼检测必要的包
+from scipy.spatial import distance as dist
+from imutils import face_utils
+from datetime import datetime
+import dlib
 
 class set_mod(QWidget):
     def __init__(self):
@@ -20,9 +33,19 @@ class set_mod(QWidget):
         #self.setWindowFlags(Qt.WindowStaysOnTopHint)
         global logoinuser
         logoinuser=''
+        # 初始化摄像头
+        self.url = cv2.CAP_DSHOW
+        self.cap = cv2.VideoCapture()
+        self.photos = 0
+
+        self.ui.query.clicked.connect(self.edit_password)
+        self.ui.start.clicked.connect(self.openCam)
+        self.ui.start_2.clicked.connect(self.takePhoto)
+
+        self.ui.commit.clicked.connect(self.type_in)
         self.ui.addmanager.clicked.connect(self.add_manager)
         self.ui.delmanager_2.clicked.connect(self.del_manager)
-        self.ui.query.clicked.connect(self.edit_password)
+
 
 
     def deal_emit_slot(self, name):
@@ -47,6 +70,131 @@ class set_mod(QWidget):
 
         #如从登录界面启动此处可接收logoin发送的信号，可以执行下一条程序，即可跳转设置模块
         #self.show()
+    def type_in(self):
+        person_num = self.ui.num.text()
+        person_name = self.ui.name.text()
+        person_other= self.ui.other.text()
+        if self.ui.inputin.isChecked():
+            person_table='insiders'
+        elif self.ui.inputout.isChecked():
+            person_table = 'externals'
+        if self.ui.sex_man.isChecked():
+            person_sex='男'
+        elif self.ui.sex_wo.isChecked():
+            person_sex = '女'
+        insider=whether_or_not('insiders','number',person_num)
+        outsider=whether_or_not('externals','number',person_num)
+        if person_num == '' or person_name == '' :
+            self.warn = Ui_warn('请完善信息！')
+            self.warn.setWindowModality(Qt.ApplicationModal)
+            self.warn.show()
+        elif insider!=1 and outsider!=1:
+            face, cur = connectsql()
+            try:
+                sql = "INSERT INTO %s VALUES ('%s','%s','%s','%s')"%(person_table,person_num,person_name,person_sex,person_other)
+                if cur.execute(sql):
+                    face.commit()
+                    self.warn = Ui_warn('采集成功！\n请继续录入人脸信息')
+                    self.warn.setWindowModality(Qt.ApplicationModal)
+                    self.warn.show()
+            except:
+                face.rollback()
+                self.warn = Ui_warn('录入信息失败！')
+                self.warn.setWindowModality(Qt.ApplicationModal)
+                self.warn.show()
+            closesql(face, cur)
+        else:
+            self.warn = Ui_warn('编号已存在！')
+            self.warn.setWindowModality(Qt.ApplicationModal)
+            self.warn.show()
+        self.ui.other.clear()
+    def openCam(self):
+        # 判断摄像头是否打开，如果打开则为true，反之为false
+        flagCam = self.cap.isOpened()
+        if flagCam == False:
+            self.num_text = self.ui.num.text()
+            insider = whether_or_not('insiders', 'number', self.num_text)
+            outsider = whether_or_not('externals', 'number', self.num_text)
+            if insider==1 or outsider==1:
+                self.warn = Ui_warn('开始采集编号\n'+self.num_text+'图像！')
+                self.warn.setWindowModality(Qt.ApplicationModal)
+                self.warn.show()
+                self.cap.open(self.url)
+                #t1=threading.Thread(target=self.showCapture,args=())
+                #t1.setDaemon(True)
+                #t1.start()
+                self.showCapture()
+            else:
+                self.warn = Ui_warn('请输入采集人员编号！')
+                self.warn.setWindowModality(Qt.ApplicationModal)
+                self.warn.show()
+        elif flagCam == True:
+            self.cap.release()
+            #self.ui.start.setText('打开相机')
+    def showCapture(self):
+        self.ui.start.setText('停止采集')
+        # 导入opencv人脸检测xml文件
+        cascade = 'haarcascade_frontalface_default.xml'
+        # 加载 Haar级联人脸检测库
+        detector = cv2.CascadeClassifier(cascade)
+        # 循环来自视频文件流的帧
+        while self.cap.isOpened():
+            ret, frame = self.cap.read(self.url)
+            QApplication.processEvents()
+            frame = imutils.resize(frame, width=500)
+            rects = detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), scaleFactor=1.1,
+                                              minNeighbors=5, minSize=(30, 30))
+            #for (x, y, w, h) in rects:
+                #cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                #frame = cv2.putText(frame, "Have token {}/20 face".format(self.photos), (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,(200, 100, 50), 2)
+
+            # 显示输出框架
+            show_video = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
+            # opencv读取图片的样式，不能通过Qlabel进行显示，需要转换为Qimage。
+            # QImage(uchar * data, int width, int height, int bytesPerLine, Format format)
+            self.showImage = QImage(show_video.data, show_video.shape[1], show_video.shape[0], QImage.Format_RGB888)
+
+            self.ui.label.setPixmap(QPixmap.fromImage(self.showImage))
+            self.ui.label.setScaledContents(True)
+            # cv2.destroyAllWindows()
+        # 因为最后一张画面会显示在GUI中，此处实现清除
+        self.ui.label.clear()
+        self.ui.start.setText('打开相机')
+    # 创建文件夹
+    def mkdir(self, path):
+        # 去除首位空格
+        path = path.strip()
+        # 去除尾部 \ 符号
+        path = path.rstrip("\\")
+        # 判断路径是否存在, 存在=True; 不存在=False
+        isExists = os.path.exists(path)
+        # 判断结果
+        if not isExists:
+            # 如果不存在则创建目录
+            os.makedirs(path)
+            return True
+    def takePhoto(self):
+        if self.cap.isOpened():
+            self.photos += 1
+            self.filename = "dataset\\{}\\".format(self.num_text)
+            self.mkdir(self.filename)
+            photo_save_path = os.path.join(os.path.dirname(os.path.abspath('__file__')), '{}'.format(self.filename))
+            self.showImage.save(photo_save_path + datetime.now().strftime("%Y%m%d%H%M%S") + ".png")
+            # p = os.path.sep.join([output, "{}.png".format(str(total).zfill(5))])
+            # cv2.imwrite(p, self.showImage)
+            if self.photos == 20:
+                QMessageBox.information(self, "Information", self.tr("采集成功!"), QMessageBox.Yes | QMessageBox.No)
+                self.cap.release()
+                self.ui.label.clear()
+                self.photos = 0
+                self.ui.start.setText('打开相机')
+        else:
+            self.warn = Ui_warn('请打开相机！')
+            self.warn.setWindowModality(Qt.ApplicationModal)
+            self.warn.show()
+
+
+
     def show_user(self):
         _translate = QtCore.QCoreApplication.translate
         self.ui.adduser.setEnabled(True)
@@ -120,10 +268,8 @@ class set_mod(QWidget):
             sql = "select password from users where user='admin'"
             cur.execute(sql)
             suppass = cur.fetchone()
-            sel_sql="select count(*) from users where user = '%s'"%(user_name)
-            cur.execute(sel_sql)
-            count=cur.fetchone()
-            if ad_pass == suppass[0] and count[0]==1:
+            count=whether_or_not('users','user',user_name)
+            if ad_pass == suppass[0] and count==1:
                 try:
                     del_sql="DELETE FROM {table} WHERE user='{condition}'".format(table = 'users', condition = user_name)
                     if cur.execute(del_sql):
@@ -181,6 +327,7 @@ class set_mod(QWidget):
         self.ui.passold.clear()
         self.ui.newpass.clear()
         self.ui.newpass_2.clear()
+
 
 
 

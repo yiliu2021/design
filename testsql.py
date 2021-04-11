@@ -1,6 +1,9 @@
-import pymysql
-face = pymysql.connect(host='localhost', user='root', password='lgx', port=3306, db='face')
-cur = face.cursor()
+from mysqlload import *
+face ,cur = connectsql()
+cur.execute('SELECT VERSION()')
+data = cur.fetchone()
+# 打印版本
+print(data)
 # 打整个表
 sql = "select * from users"
 cur.execute(sql)
@@ -16,13 +19,11 @@ cur.execute(sql)
 sqlpassword = cur.fetchone()
 print('表格第一行内容：',sqlpassword)
 #查某个值
-user_name='ll'
-sel_sql="select count(*) from users where user = '%s'"%(user_name)
-cur.execute(sel_sql)
-count=cur.fetchone()
-print('ll的内容行数：',count[0])
-if count[0]==1:
-    print('count[0]是整数1')
+b='admin'
+a=whether_or_not('users','user',b)
+print('**的内容行数：',a)
+if a==1:
+    print('a是整数1')
 #一行一行打
 sql = "select * from users"
 cur.execute(sql)
@@ -47,3 +48,4 @@ print('修改行数：',update)
 face.commit()
 cur.close()
 face.close()
+
