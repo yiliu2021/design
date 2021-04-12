@@ -1,29 +1,36 @@
 from mysqlload import *
+from datetime import datetime, timedelta
 face ,cur = connectsql()
 cur.execute('SELECT VERSION()')
 data = cur.fetchone()
 # 打印版本
 print(data)
-# 打整个表
-sql = "select * from users"
+now_time = datetime.now()
+end_time = now_time + timedelta(days=30)
+a=now_time.strftime("%Y%m%d %H:%M:%S")
+c = datetime.strptime(a, '%Y%m%d %H:%M:%S')
+b=end_time.strftime("%Y%m%d %H:%M:%S")
+d= datetime.strptime(b, '%Y%m%d %H:%M:%S')
+print(a)
+print(b)
+print(d)
+sql = "select * from gooutperson where DATE_FORMAT(datetime,'%Y%m%d %H:%i:%s') BETWEEN'{a}'and'{b}'" .format(a=a,b=b)
+print(sql)
 cur.execute(sql)
-suppass = cur.fetchall()
-print('现在表格内容：',suppass)
-#插一行
-sql="INSERT INTO users VALUES ('ll','ll')"
-print('插入一行',sql)
+c= cur.fetchall()
+print(c)
+
+
+sql = "select * from gooutperson where DATE_FORMAT(datetime,'%Y%m%d') = '20210416'"
 cur.execute(sql)
-#打一行
-sql = "select password from users where user='admin'"
+a= cur.fetchone()
+print(a)
+
+sql = "select * from gooutperson where DATE_FORMAT(datetime,'%Y%m%d %H:%i:%s') BETWEEN '20210412 21:00:00' and  '20210416 22:00:00'"
 cur.execute(sql)
-sqlpassword = cur.fetchone()
-print('表格第一行内容：',sqlpassword)
-#查某个值
-b='admin'
-a=whether_or_not('users','user',b)
-print('**的内容行数：',a)
-if a==1:
-    print('a是整数1')
+a= cur.fetchall()
+print(a)
+
 #一行一行打
 sql = "select * from users"
 cur.execute(sql)
@@ -32,12 +39,6 @@ while True:
     if not row:
         break
     print('现在表格内容：',row)
-#删一行
-user_name='ll'
-del_sql="DELETE FROM {table} WHERE user='{condition}'".format(table = 'users', condition = user_name)
-print(del_sql)
-cur.execute(del_sql)
-print('sha')
 #改hh的密码
 a='aa'
 b='hh'

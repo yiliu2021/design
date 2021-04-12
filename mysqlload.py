@@ -13,7 +13,7 @@ def Loaddata():
     cursor.execute("CREATE DATABASE IF NOT EXISTS face")
     cursor.close()
     db.close()
-    face,cur=connectsql()
+    face, cur=connectsql()
     usertable_sql = """CREATE TABLE IF NOT EXISTS users (
                     user VARCHAR(20) NOT NULL, 
                     password VARCHAR(20) NOT NULL, 
@@ -33,13 +33,6 @@ def Loaddata():
                         other VARCHAR(255),
                         PRIMARY KEY (number))"""
     cur.execute(externaltable_sql)
-    leavepstable_sql = """CREATE TABLE IF NOT EXISTS leaveps (
-                        number VARCHAR(30) NOT NULL, 
-                        name VARCHAR(10) NOT NULL, 
-                        sex VARCHAR(2) NOT NULL,
-                        other VARCHAR(255),
-                        PRIMARY KEY (number))"""
-    cur.execute(leavepstable_sql)
     visitorstable_sql = """CREATE TABLE IF NOT EXISTS visitors (
                             number VARCHAR(30) NOT NULL, 
                             name VARCHAR(10) NOT NULL, 
@@ -51,8 +44,7 @@ def Loaddata():
                                 number VARCHAR(30) NOT NULL, 
                                 name VARCHAR(10) NOT NULL, 
                                 sex VARCHAR(2) NOT NULL,
-                                date VARCHAR(20) NOT NULL,
-                                time VARCHAR(20) NOT NULL,
+                                datetime VARCHAR(20) NOT NULL,
                                 other VARCHAR(255),
                                 PRIMARY KEY (number))"""
     cur.execute(checkintable_sql)
@@ -60,8 +52,7 @@ def Loaddata():
                                     number VARCHAR(30) NOT NULL, 
                                     name VARCHAR(10) NOT NULL, 
                                     sex VARCHAR(2) NOT NULL,
-                                    date VARCHAR(20) NOT NULL,
-                                    time VARCHAR(20) NOT NULL,
+                                    datetime VARCHAR(20) NOT NULL,
                                     other VARCHAR(255),
                                     PRIMARY KEY (number))"""
     cur.execute(comeintable_sql)
@@ -69,7 +60,7 @@ def Loaddata():
                                             number VARCHAR(30) NOT NULL, 
                                             name VARCHAR(10) NOT NULL, 
                                             sex VARCHAR(2) NOT NULL,
-                                            date VARCHAR(20) NOT NULL,
+                                            datetime VARCHAR(20) NOT NULL,
                                             other VARCHAR(255),
                                             PRIMARY KEY (number))"""
     cur.execute(gooutpersontable_sql)
@@ -77,8 +68,7 @@ def Loaddata():
                                         number VARCHAR(30) NOT NULL, 
                                         name VARCHAR(10) NOT NULL, 
                                         sex VARCHAR(2) NOT NULL,
-                                        date VARCHAR(20) NOT NULL,
-                                        time VARCHAR(20) NOT NULL,
+                                        datetime VARCHAR(20) NOT NULL,
                                         other VARCHAR(255),
                                         PRIMARY KEY (number))"""
     cur.execute(goouttable_sql)
