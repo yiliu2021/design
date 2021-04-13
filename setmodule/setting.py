@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-#from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import *
+#from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QInputDialog
 #from PyQt5.QtGui import *
 from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtCore import *
@@ -59,10 +59,16 @@ class set_mod(QWidget):
         _translate = QtCore.QCoreApplication.translate
         global logoinuser
         logoinuser=name
+        # 设置日历为当天时间
+        self.ui.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
         # 如从登录界面启动此处可接收logoin发送的信号，可以执行下一条程序，即可跳转设置模块
         # self.show()
         if logoinuser=='admin':
-            self.ui.welcome.setText(_translate("userset","<html><head/><body><p align=\"center\">" + logoinuser + "，你好！</p></body></html>"))
+            self.ui.label_12.setText(
+                _translate("userset", "<html><head/><body><p align=\"center\">账户管理</p></body></html>"))
+            self.ui.welcome.setText(
+                _translate("userset","<html><head/><body><p align=\"center\">"+
+                           logoinuser + "，你好！</p></body></html>"))
             try:
                 self.show_user()
             except:
@@ -70,13 +76,14 @@ class set_mod(QWidget):
                 self.warn.setWindowModality(Qt.ApplicationModal)
                 self.warn.show()
         else:
-            self.ui.welcome.setText(_translate("userset","<html><head/><body><p align=\"center\">" + logoinuser + "，你好！</p></body></html>"))
+            self.ui.welcome.setText(
+                _translate("userset","<html><head/><body><p align=\"center\">"+
+                           logoinuser + "，你好！</p></body></html>"))
             self.ui.tableWidget_3.setRowCount(0)
             self.ui.adduser.setEnabled(False)
-            self.ui.label_12.setText(_translate("userset", "<html><head/><body><p align=\"center\">账户编辑需管理员权限！</p></body></html>"))
+            self.ui.label_12.setText(
+                _translate("userset", "<html><head/><body><p align=\"center\">账户编辑需管理员权限！</p></body></html>"))
 
-        #如从登录界面启动此处可接收logoin发送的信号，可以执行下一条程序，即可跳转设置模块
-        #self.show()
     def type_in(self):
         person_num = self.ui.num.text()
         person_name = self.ui.name.text()
@@ -98,7 +105,8 @@ class set_mod(QWidget):
         elif insider!=1 and outsider!=1:
             face, cur = connectsql()
             try:
-                sql = "INSERT INTO %s VALUES ('%s','%s','%s','%s')"%(person_table,person_num,person_name,person_sex,person_other)
+                sql = "INSERT INTO %s VALUES ('%s','%s','%s','%s')"%(
+                    person_table,person_num,person_name,person_sex,person_other)
                 if cur.execute(sql):
                     face.commit()
                     self.show_person()
@@ -127,9 +135,6 @@ class set_mod(QWidget):
                 self.warn.setWindowModality(Qt.ApplicationModal)
                 self.warn.show()
                 self.cap.open(self.url)
-                #t1=threading.Thread(target=self.showCapture,args=())
-                #t1.setDaemon(True)
-                #t1.start()
                 self.showCapture()
             else:
                 self.warn = Ui_warn('请输入采集人员编号！')
@@ -141,7 +146,7 @@ class set_mod(QWidget):
     def showCapture(self):
         self.ui.start.setText('停止采集')
         # 导入opencv人脸检测xml文件,文件导入需根据工作目录变更，如从本代码进入删除掉setmodule\\
-        cascade = 'setmodule\\haarcascade_frontalface_default.xml'
+        cascade = 'setmodule\\haarcascade_frontalface_alt2.xml'
         # 加载 Haar级联人脸检测库
         detector = cv2.CascadeClassifier(cascade)
         # 循环来自视频文件流的帧
@@ -152,7 +157,8 @@ class set_mod(QWidget):
             rects = detector.detectMultiScale(cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY), 1.02, 5)
             for x, y, w, h in rects:
                 cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                frame2 = cv2.putText(frame1, "Have token {}/20 face".format(self.photos), (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,(200, 100, 50), 2)
+                frame2 = cv2.putText(frame1, "Have token {}/20 face".format(self.photos),
+                                     (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,(200, 100, 50), 2)
 
             # 显示输出框架
             show_video = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
@@ -349,7 +355,8 @@ class set_mod(QWidget):
             cur.execute(sql)
             per = cur.fetchone()
             if whether_or_not('gooutperson', 'number', person_num)==1:
-                update_sql = "update gooutperson set datetime='%s' where number='%s'" % (confire_time, person_num)
+                update_sql = "update gooutperson set datetime='%s' where number='%s'" % (
+                    confire_time, person_num)
                 cur.execute(update_sql)
             else:
                 insert_sql = "INSERT INTO gooutperson VALUES {condition}".format(condition=(
@@ -384,12 +391,15 @@ class set_mod(QWidget):
         end_time = now_time + timedelta(days=30)
         a = now_time.strftime("%Y%m%d %H:%M:%S")
         b = end_time.strftime("%Y%m%d %H:%M:%S")
-        sql = "select * from gooutperson where DATE_FORMAT(datetime,'%Y%m%d %H:%i:%s') BETWEEN'{a}'and'{b}'".format(a=a,b=b)
+        sql = "select * from gooutperson where DATE_FORMAT(datetime,'%Y%m%d %H:%i:%s') BETWEEN'{a}'and'{b}'".format(
+            a=a,b=b)
         cur.execute(sql)
         # 返回表格所有数据
         goout_per = cur.fetchall()
         rows = len(goout_per)
         self.ui.tableWidget_2.setRowCount(rows)
+        # 根据内容重新设定第3列
+        self.ui.tableWidget_2.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
         for i in range(rows):
             item = QtWidgets.QTableWidgetItem()
             self.ui.tableWidget_2.setVerticalHeaderItem(i, item)
@@ -502,7 +512,7 @@ class set_mod(QWidget):
     def del_manager(self):
         ad_pass = self.ui.adminpass.text()
         user_name = self.ui.manageuser.text()
-        if ad_pass=='' or user_name=='':
+        if ad_pass=='' or user_name=='' or user_name=='admin':
             self.warn = Ui_warn('无效信息！')
             self.warn.setWindowModality(Qt.ApplicationModal)
             self.warn.show()
@@ -514,7 +524,8 @@ class set_mod(QWidget):
             count=whether_or_not('users','user',user_name)
             if ad_pass == suppass[0] and count==1:
                 try:
-                    del_sql="DELETE FROM {table} WHERE user='{condition}'".format(table = 'users', condition = user_name)
+                    del_sql="DELETE FROM {table} WHERE user='{condition}'".format(
+                        table = 'users', condition = user_name)
                     if cur.execute(del_sql):
                         face.commit()
                         self.ui.tableWidget_3.setRowCount(0)

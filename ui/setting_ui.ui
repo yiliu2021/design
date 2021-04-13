@@ -32,7 +32,7 @@
       <string notr="true">QWidget::tab{height:40px;width:120px;}</string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>

@@ -4,7 +4,6 @@ from PyQt5.QtCore import *
 import sys
 
 
-#界面仅对日历默认时间进行了修改
 
 
 class Ui_userset(object):
@@ -691,8 +690,7 @@ class Ui_userset(object):
         self.gridLayout_6.addLayout(self.horizontalLayout_26, 0, 0, 1, 1)
         self.setting.addTab(self.adduser, "")
         self.gridLayout.addWidget(self.setting, 0, 0, 1, 1)
-        # 设置日历为当天时间
-        self.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
+
 
         self.retranslateUi(userset)
         self.setting.setCurrentIndex(4)

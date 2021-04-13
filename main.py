@@ -81,7 +81,16 @@ class Ui_Form(QWidget):
                                                                     background:darkGray;}''')
         self.set_2 = QtWidgets.QLabel(Form)
         self.set_2.setGeometry(QtCore.QRect(78, 180, 80, 20))
-        self.set_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.set_2.setStyleSheet("background-color:rgba(0,0,0,0);"
+                                 "border-color:rgba(0,0,0,0);"
+                                 "color: rgba(0, 0, 0,255);"
+                                 "border-style:none;"
+                                 "border-width:1px;"
+                                 "border-radius:0px;"
+                                 "font:20px \"黑体\";"
+                                 "font-style:normal;"
+                                 "font-weight: normal;"
+                                 "text-decoration:blink;")
         self.set_2.setObjectName("set_2")
 
         # 考勤图标
@@ -100,7 +109,16 @@ class Ui_Form(QWidget):
                                                                             background:darkGray;}''')
         self.checkingin_2 = QtWidgets.QLabel(Form)
         self.checkingin_2.setGeometry(QtCore.QRect(270, 180, 40, 20))
-        self.checkingin_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.checkingin_2.setStyleSheet("background-color:rgba(0,0,0,0);"
+                                        "border-color:rgba(0,0,0,0);"
+                                        "color: rgba(0, 0, 0,255);"
+                                        "border-style:none;"
+                                        "border-width:1px;"
+                                        "border-radius:0px;"
+                                        "font:20px \"黑体\";"
+                                        "font-style:normal;"
+                                        "font-weight: normal;"
+                                        "text-decoration:blink;")
         self.checkingin_2.setObjectName("checkingin_2")
 
         # 门禁图标
@@ -118,7 +136,16 @@ class Ui_Form(QWidget):
                                                                             background:darkGray;}''')
         self.entrance_2 = QtWidgets.QLabel(Form)
         self.entrance_2.setGeometry(QtCore.QRect(420, 140, 100, 100))
-        self.entrance_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.entrance_2.setStyleSheet("background-color:rgba(0,0,0,0);"
+                                      "border-color:rgba(0,0,0,0);"
+                                      "color: rgba(0, 0, 0,255);"
+                                      "border-style:none;"
+                                      "border-width:1px;"
+                                      "border-radius:0px;"
+                                      "font:20px \"黑体\";"
+                                      "font-style:normal;"
+                                      "font-weight: normal;"
+                                      "text-decoration:blink;")
         self.entrance_2.setObjectName("entrance_2")
 
         # 来访图标
@@ -136,7 +163,16 @@ class Ui_Form(QWidget):
                                                                             background:darkGray;}''')
         self.visit_2 = QtWidgets.QLabel(Form)
         self.visit_2.setGeometry(QtCore.QRect(250, 330, 80, 20))
-        self.visit_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.visit_2.setStyleSheet("background-color:rgba(0,0,0,0);"
+                                   "border-color:rgba(0,0,0,0);"
+                                   "color: rgba(0, 0, 0,255);"
+                                   "border-style:none;"
+                                   "border-width:1px;"
+                                   "border-radius:0px;"
+                                   "font:20px \"黑体\";"
+                                   "font-style:normal;"
+                                   "font-weight: normal;"
+                                   "text-decoration:blink;")
         self.visit_2.setObjectName("visit_2")
 
         # 外出图标
@@ -154,7 +190,16 @@ class Ui_Form(QWidget):
                                                                             background:darkGray;}''')
         self.goout_2 = QtWidgets.QLabel(Form)
         self.goout_2.setGeometry(QtCore.QRect(78, 330, 80, 20))
-        self.goout_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.goout_2.setStyleSheet("background-color:rgba(0,0,0,0);"
+                                   "border-color:rgba(0,0,0,0);"
+                                   "color: rgba(0, 0, 0,255);"
+                                   "border-style:none;"
+                                   "border-width:1px;"
+                                   "border-radius:0px;"
+                                   "font:20px \"黑体\";"
+                                   "font-style:normal;"
+                                   "font-weight: normal;"
+                                   "text-decoration:blink;")
         self.goout_2.setObjectName("goout_2")
 
         # 查询图标
@@ -172,7 +217,16 @@ class Ui_Form(QWidget):
                                                                             background:darkGray;}''')
         self.select_2 = QtWidgets.QLabel(Form)
         self.select_2.setGeometry(QtCore.QRect(440, 330, 40, 20))
-        self.select_2.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;font:20px \"黑体\";font-style:normal;font-weight: normal;text-decoration:blink;")
+        self.select_2.setStyleSheet(
+            "background-color:rgba(0,0,0,0);"
+            "border-color:rgba(0,0,0,0);"
+            "color: rgba(0, 0, 0,255);"
+            "border-style:none;border-width:1px;"
+            "border-radius:0px;"
+            "font:20px \"黑体\";"
+            "font-style:normal;"
+            "font-weight: normal;"
+            "text-decoration:blink;")
         self.select_2.setObjectName("select_2")
 
         Form.setWindowOpacity(0.9)  # 设置窗口透明度
