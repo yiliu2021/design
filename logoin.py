@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
-import pymysql
 from setmodule.setting import set_mod
 from warnning import Ui_warn
 from mysqlload import *
+import qtawesome
 
 
 class Ui_logoin(QWidget):
@@ -60,6 +60,10 @@ class Ui_logoin(QWidget):
         logoin.setObjectName("logoin")
         logoin.resize(320, 214)
         self.gridLayout = QtWidgets.QGridLayout(logoin)
+
+        spin_icon = qtawesome.icon('fa5s.angle-double-right', color='black')
+        logoin.setWindowIcon(spin_icon)
+
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")

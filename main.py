@@ -11,6 +11,9 @@ from logoin import Ui_logoin
 sys.path.append('setmodule\\')
 from setting import set_mod
 
+sys.path.append('checkinmodule\\')
+from checkin import checkin_mod
+
 #考虑主程序、登录界面、提示框不涉及功能执行，这三个文件界面和功能通过单独一个类实现
 class Ui_Form(QWidget):
     setusername = pyqtSignal(str)
@@ -20,8 +23,11 @@ class Ui_Form(QWidget):
         self.retranslateUi(self)
         self.setting=set_mod()
         self.logo=Ui_logoin()
+        self.checkin=checkin_mod()
+
         self.logo.Signal_parp.connect(self.tosetting)
         self.setbutton.clicked.connect(self.logoinstart)
+        self.checkingin.clicked.connect(self.tocheckin)
 
         self.closebutton.clicked.connect(self.close)  #关闭窗口
         self.minbutton.clicked.connect(self.showMinimized)  #最小化窗口
@@ -261,6 +267,10 @@ class Ui_Form(QWidget):
         self.setusername.emit(user)
         self.setting.setWindowModality(Qt.ApplicationModal)
         self.setting.show()
+    def tocheckin(self):
+        self.checkin.setWindowModality(Qt.ApplicationModal)
+        self.checkin.showMaximized()
+
 
     def showTimeText(self):
         # 设置宽度
@@ -294,7 +304,6 @@ if __name__ == '__main__':
     window.show()
     try:
         Loaddata()
-        print('数据库加载成功')
     except:
         loadfail = Ui_warn()
         loadfail.show()

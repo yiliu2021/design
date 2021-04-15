@@ -32,7 +32,7 @@
       <string notr="true">QWidget::tab{height:40px;width:120px;}</string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <property name="iconSize">
       <size>
@@ -83,6 +83,9 @@
                  <width>0</width>
                  <height>30</height>
                 </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#groupBox{border:none}</string>
                </property>
                <property name="title">
                 <string/>
@@ -626,6 +629,9 @@
                  <height>30</height>
                 </size>
                </property>
+               <property name="styleSheet">
+                <string notr="true">#groupBox{border:none}</string>
+               </property>
                <property name="title">
                 <string/>
                </property>
@@ -1155,11 +1161,6 @@
            <attribute name="verticalHeaderShowSortIndicator" stdset="0">
             <bool>false</bool>
            </attribute>
-           <row>
-            <property name="text">
-             <string>1</string>
-            </property>
-           </row>
            <column>
             <property name="text">
              <string>编号</string>
@@ -1499,11 +1500,6 @@
            <attribute name="verticalHeaderMinimumSectionSize">
             <number>20</number>
            </attribute>
-           <row>
-            <property name="text">
-             <string>1</string>
-            </property>
-           </row>
            <column>
             <property name="text">
              <string>编号</string>
@@ -2119,11 +2115,6 @@
            <attribute name="verticalHeaderMinimumSectionSize">
             <number>20</number>
            </attribute>
-           <row>
-            <property name="text">
-             <string>1</string>
-            </property>
-           </row>
            <column>
             <property name="text">
              <string>账户名</string>

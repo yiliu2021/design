@@ -1,15 +1,17 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+import qtawesome
 import sys
-
-
-
 
 class Ui_userset(object):
     def setupUi(self, userset):
         userset.setObjectName("userset")
         userset.resize(720, 566)
+
+        #userset.setWindowOpacity(0.9)  # 设置窗口透明度
+        spin_icon = qtawesome.icon('fa5s.cog', color='black')
+        userset.setWindowIcon(spin_icon)
+
         self.gridLayout = QtWidgets.QGridLayout(userset)
         self.gridLayout.setObjectName("gridLayout")
         self.setting = QtWidgets.QTabWidget(userset)
@@ -38,6 +40,7 @@ class Ui_userset(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.groupBox_3 = QtWidgets.QGroupBox(self.insert)
         self.groupBox_3.setMinimumSize(QtCore.QSize(0, 30))
+        self.groupBox_3.setStyleSheet("#groupBox{border:none}")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
         self.inputin = QtWidgets.QRadioButton(self.groupBox_3)
@@ -205,6 +208,7 @@ class Ui_userset(object):
         self.horizontalLayout_65.setObjectName("horizontalLayout_65")
         self.groupBox_4 = QtWidgets.QGroupBox(self.update)
         self.groupBox_4.setMinimumSize(QtCore.QSize(0, 30))
+        self.groupBox_4.setStyleSheet("#groupBox{border:none}")
         self.groupBox_4.setTitle("")
         self.groupBox_4.setObjectName("groupBox_4")
         self.editin = QtWidgets.QRadioButton(self.groupBox_4)
@@ -352,9 +356,7 @@ class Ui_userset(object):
         self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(4)
-        self.tableWidget.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setVerticalHeaderItem(0, item)
+        self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -469,9 +471,7 @@ class Ui_userset(object):
         self.tableWidget_2.setStyleSheet("QTableWidget{background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;alternate-background-color:rgba(0,0,0,32);gridline-color:rgba(0,6,0,0);font:19px \"宋体\";}QHeaderView::section{border-style:none;border-width:1px;border-radius:0px;background-color:rgba(0,0,0,42);border-color:rgba(0,0,0,255);}")
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(5)
-        self.tableWidget_2.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget_2.setVerticalHeaderItem(0, item)
+        self.tableWidget_2.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -677,9 +677,7 @@ class Ui_userset(object):
         self.tableWidget_3.setStyleSheet("QTableWidget{background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,0);color: rgba(0, 0, 0,255);border-style:none;border-width:1px;border-radius:0px;alternate-background-color:rgba(0,0,0,32);gridline-color:rgba(0,6,0,0);font:19px \"宋体\";}QHeaderView::section{border-style:none;border-width:1px;border-radius:0px;background-color:rgba(0,0,0,42);border-color:rgba(0,0,0,255);}")
         self.tableWidget_3.setObjectName("tableWidget_3")
         self.tableWidget_3.setColumnCount(1)
-        self.tableWidget_3.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget_3.setVerticalHeaderItem(0, item)
+        self.tableWidget_3.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_3.setHorizontalHeaderItem(0, item)
         self.tableWidget_3.horizontalHeader().setMinimumSectionSize(100)
@@ -690,7 +688,6 @@ class Ui_userset(object):
         self.gridLayout_6.addLayout(self.horizontalLayout_26, 0, 0, 1, 1)
         self.setting.addTab(self.adduser, "")
         self.gridLayout.addWidget(self.setting, 0, 0, 1, 1)
-
 
         self.retranslateUi(userset)
         self.setting.setCurrentIndex(4)
@@ -737,8 +734,6 @@ class Ui_userset(object):
         self.xiu_2.setText(_translate("userset", "2.不可直接修改人员编号，可删除后重新录入。"))
         self.label_3.setText(_translate("userset", "3.可查看本单位或外单位库内所有人员。"))
         self.tableWidget.setSortingEnabled(True)
-        item = self.tableWidget.verticalHeaderItem(0)
-        item.setText(_translate("userset", "1"))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("userset", "编号"))
         item = self.tableWidget.horizontalHeaderItem(1)
@@ -755,8 +750,6 @@ class Ui_userset(object):
         self.dateTimeEdit.setDisplayFormat(_translate("userset", "yyyy/MM/dd HH:mm"))
         self.confire.setText(_translate("userset", "设置外出时间"))
         self.xiu_4.setText(_translate("userset", "    设置对应编号人员外出时间。"))
-        item = self.tableWidget_2.verticalHeaderItem(0)
-        item.setText(_translate("userset", "1"))
         item = self.tableWidget_2.horizontalHeaderItem(0)
         item.setText(_translate("userset", "编号"))
         item = self.tableWidget_2.horizontalHeaderItem(1)
@@ -784,8 +777,6 @@ class Ui_userset(object):
         self.addmanager.setText(_translate("userset", "添加"))
         self.xiu_5.setText(_translate("userset", "1.删除用户输入管理员密码及需删除用户名即可删除。"))
         self.xiu_6.setText(_translate("userset", "2.可查看已创建的所有用户。"))
-        item = self.tableWidget_3.verticalHeaderItem(0)
-        item.setText(_translate("userset", "1"))
         item = self.tableWidget_3.horizontalHeaderItem(0)
         item.setText(_translate("userset", "账户名"))
         self.setting.setTabText(self.setting.indexOf(self.adduser), _translate("userset", "账户编辑"))
@@ -794,5 +785,5 @@ if __name__ == '__main__':
     window=QWidget()
     testselfset = Ui_userset()
     testselfset.setupUi(window)
-    window.show()  # 最大化显示
+    window.showMaximized()  # 最大化显示
     sys.exit(app.exec_())

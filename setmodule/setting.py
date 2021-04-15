@@ -1,29 +1,16 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
-#from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QInputDialog
-#from PyQt5.QtGui import *
 from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtCore import *
-#from PyQt5.QtCore import QTimer, QDateTime, QCoreApplication, QThread
-import cv2, imutils
-import pymysql
 global logoinuser
 #设置模块在独立于主程序的文件夹，为确保主程序引入不出错误，独立模块文件夹内相互引用宜加上文件夹名称
 from setmodule.setting_ui import Ui_userset
-import sys,os
+import sys
 sys.path.append('../')
 from warnning import Ui_warn
 from mysqlload import *
 from GeneratorModel import *
-# 导入人脸识别检测包
-from imutils.video import VideoStream
-import numpy as np
-import pickle
-# 导入眨眼检测必要的包
-from scipy.spatial import distance as dist
-from imutils import face_utils
 from datetime import datetime, timedelta
-import dlib
 
 class set_mod(QWidget):
     def __init__(self):
@@ -31,6 +18,7 @@ class set_mod(QWidget):
         self.ui=Ui_userset()
         self.ui.setupUi(self)
         #self.setWindowFlags(Qt.WindowStaysOnTopHint)
+
         global logoinuser
         logoinuser=''
         # 初始化摄像头
@@ -207,7 +195,9 @@ class set_mod(QWidget):
     def trainModel(self):
         Generator()
         TrainModel()
-        print('Model have been trained!')
+        self.warn = Ui_warn('图像提交成功！')
+        self.warn.setWindowModality(Qt.ApplicationModal)
+        self.warn.show()
     def show_person(self):
         self.ui.tableWidget.setRowCount(0)
         if self.ui.editin.isChecked():
@@ -366,7 +356,7 @@ class set_mod(QWidget):
             closesql(face, cur)
             self.ui.name_3.setText(per[1])
             self.show_leaves()
-            #python时间字符串和date格式转换需要格式一致
+            #python时间字符串必须格式一致，字符串和date格式转换需要格式一致，date格式运算分隔号不影响
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             now_1=datetime.strptime(now, '%Y-%m-%d %H:%M:%S')
             confire_time_1=datetime.strptime(confire_time, '%Y-%m-%d %H:%M:%S')

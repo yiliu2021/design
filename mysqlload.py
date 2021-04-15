@@ -43,18 +43,14 @@ def Loaddata():
     checkintable_sql = """CREATE TABLE IF NOT EXISTS checkin (
                                 number VARCHAR(30) NOT NULL, 
                                 name VARCHAR(10) NOT NULL, 
-                                sex VARCHAR(2) NOT NULL,
-                                datetime VARCHAR(20) NOT NULL,
-                                other VARCHAR(255),
-                                PRIMARY KEY (number))"""
+                                datetime VARCHAR(20),
+                                other VARCHAR(255))"""
     cur.execute(checkintable_sql)
     comeintable_sql = """CREATE TABLE IF NOT EXISTS comein (
                                     number VARCHAR(30) NOT NULL, 
                                     name VARCHAR(10) NOT NULL, 
-                                    sex VARCHAR(2) NOT NULL,
-                                    datetime VARCHAR(20) NOT NULL,
-                                    other VARCHAR(255),
-                                    PRIMARY KEY (number))"""
+                                    datetime VARCHAR(20),
+                                    other VARCHAR(255))"""
     cur.execute(comeintable_sql)
     gooutpersontable_sql = """CREATE TABLE IF NOT EXISTS gooutperson (
                                             number VARCHAR(30) NOT NULL, 
@@ -67,10 +63,8 @@ def Loaddata():
     goouttable_sql = """CREATE TABLE IF NOT EXISTS goout (
                                         number VARCHAR(30) NOT NULL, 
                                         name VARCHAR(10) NOT NULL, 
-                                        sex VARCHAR(2) NOT NULL,
-                                        datetime VARCHAR(20) NOT NULL,
-                                        other VARCHAR(255),
-                                        PRIMARY KEY (number))"""
+                                        datetime VARCHAR(20),
+                                        other VARCHAR(255))"""
     cur.execute(goouttable_sql)
     try:
         data = {'user': 'admin', 'password': 'admin'}

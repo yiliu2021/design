@@ -5,3 +5,5 @@ dataset/
 setmodule/*.xml
 output/
 face_detection_model/
+test/
+checkinmodule/__pycache__/
