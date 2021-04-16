@@ -1,4 +1,5 @@
 import pymysql
+from datetime import datetime, timedelta
 
 def connectsql():
     face = pymysql.connect(host='localhost', user='root', password='lgx', port=3306, db='face')
@@ -7,6 +8,18 @@ def connectsql():
 def closesql(face,cur):
     cur.close()
     face.close()
+def del_logs(table):
+    face, cur = connectsql()
+    now_time = datetime.now()
+    cut_time = now_time - timedelta(days=30)
+    c_time = cut_time.strftime("%Y-%m-%d %H:%M:%S")
+    start_time = now_time - timedelta(days=60)
+    s_time = start_time.strftime("%Y-%m-%d %H:%M:%S")
+    sql = "DELETE FROM {table} where DATE_FORMAT(datetime,'%Y-%m-%d %H:%i:%s') BETWEEN'{a}'and'{b}'".format(
+        table=table, a=s_time, b=c_time)
+    num = cur.execute(sql)
+    closesql(face, cur)
+    return num
 def Loaddata():
     db = pymysql.connect(host='localhost', user='root', password='lgx', port=3306)
     cursor = db.cursor()
@@ -37,6 +50,7 @@ def Loaddata():
                             number VARCHAR(30) NOT NULL, 
                             name VARCHAR(10) NOT NULL, 
                             sex VARCHAR(2) NOT NULL,
+                            datetime VARCHAR(20) NOT NULL,
                             other VARCHAR(255),
                             PRIMARY KEY (number))"""
     cur.execute(visitorstable_sql)
@@ -77,6 +91,9 @@ def Loaddata():
             face.commit()
     except:
         face.rollback()
+    a = del_logs('checkin')
+    b = del_logs('comein')
+    c = del_logs('goout')
     closesql(face, cur)
 def whether_or_not(table,key,value):
     face, cur = connectsql()
@@ -85,7 +102,35 @@ def whether_or_not(table,key,value):
     count = cur.fetchone()
     closesql(face, cur)
     return count[0]
-
+def exsit_or_not(table,value):
+    face, cur = connectsql()
+    sel_sql = "select datetime from %s where number = '%s'" %(table, value)
+    cur.execute(sel_sql)
+    exsit = cur.fetchone()
+    closesql(face, cur)
+    currenttime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now_time = datetime.strptime(currenttime, '%Y-%m-%d %H:%M:%S')
+    if exsit == None:
+        return False
+    else:
+        try:
+            person_time = datetime.strptime(exsit[0], '%Y-%m-%d %H:%M:%S')
+            flag = person_time-now_time
+            if flag.days >= 0:
+                return True
+            else:
+                return False
+        except:
+            return False
+def select_table_section(table,start_time,end_time):
+    face, cur = connectsql()
+    sql = "select * from {table} where DATE_FORMAT(datetime,'%Y-%m-%d %H:%i:%s') BETWEEN'{a}'and'{b}'".format(
+        table=table, a=start_time, b=end_time)
+    cur.execute(sql)
+    nead_table = cur.fetchall()
+    logs=len(nead_table)
+    closesql(face, cur)
+    return nead_table, logs
 
 if __name__ == '__main__':
     Loaddata()

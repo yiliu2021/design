@@ -24,8 +24,7 @@ class Ui_warn(QWidget):
         pe.setColor(QPalette.Window, Qt.darkCyan)  # 设置背景色
         self.setPalette(pe)
 
-        #spin_icon = qtawesome.icon('fa5s.clone', color='black')
-        #warn.setWindowIcon(spin_icon)
+
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Escape:
@@ -41,6 +40,9 @@ class Ui_warn(QWidget):
         self.label.setGeometry(QtCore.QRect(30, 30, 240, 90))
         self.label.setStyleSheet("background-color:rgba(0,0,0,0);border-color:rgba(0,0,0,255);color: rgba(0, 0, 0,254);border-style:none;border-width:0px;border-radius:8px;font:20px \"华文中宋\";font-style:normal;font-weight: lighter;text-decoration:blink;")
         self.label.setObjectName("label")
+
+        spin_icon = qtawesome.icon('fa5s.exclamation-circle', color='black')
+        warn.setWindowIcon(spin_icon)
 
         self.retranslateUi(warn)
         QtCore.QMetaObject.connectSlotsByName(warn)

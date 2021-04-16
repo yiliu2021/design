@@ -2,61 +2,29 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QImage, QIcon, QPixmap
 from PyQt5.QtCore import *
+from goout_ui import Ui_goout
 import sys, os
 import cv2, imutils
-from mysqlload import *
-from datetime import datetime, timedelta
-from checkin_ui import Ui_checkin
 sys.path.append('../')
 from warnning import Ui_warn
-# 导入人脸识别检测包
-from imutils.video import VideoStream
+from mysqlload import *
+from datetime import datetime, timedelta
 import numpy as np
 import pickle
 
-class checkin_mod(QWidget):
+class goout_mod(QWidget):
     def __init__(self):
         super().__init__()
-        self.ui=Ui_checkin()
+        self.ui=Ui_goout()
         self.ui.setupUi(self)
-        # 设置日历为当天时间
-        self.ui.dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-        self.ui.display_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
-        self.ui.belate_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
 
         # 初始化摄像头
         self.url = cv2.CAP_DSHOW
         self.cap = cv2.VideoCapture()
 
-        self.ui.start.clicked.connect(self.checkin_fun)
-    def left_time(self,end_time):
-        currentTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        checkin_time = datetime.strptime(currentTime, '%Y-%m-%d %H:%M:%S')
-        set_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
-        left_time = set_time - checkin_time
-        return left_time.days,left_time.seconds
-    def checkin_fun(self):
-        set_checkin = self.ui.dateTimeEdit.dateTime().toString("yyyy-MM-dd hh:mm:ss")
-        left_days, time_section = self.left_time(set_checkin)
-        flag = self.cap.isOpened()
-        if flag == True:
-            self.cap.release()
-            self.ui.start.setText('开始考勤')
-        elif left_days == 0:
-            self.ui.start.setText('退出考勤')
-            self.ui.display_table.setRowCount(0)
-            self.ui.belate_table.setRowCount(0)
-            self.ui.display.clear()
-            self.start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.set_checkin = set_checkin
-            self.time_section = time_section
-            self.cap.open(self.url)
-            self.start_checkin()
-        elif left_days != 0:
-            self.warn = Ui_warn('请设定考勤结束时间！')
-            self.warn.setWindowModality(Qt.ApplicationModal)
-            self.warn.show()
-    def start_checkin(self):
+    def goout_fun(self,a):
+        print(a)
+        self.cap.open(self.url)
         # 初始化需要记录的人名
         self.record_name = ([])
         # OpenCV深度学习人脸检测器的路径
@@ -133,45 +101,7 @@ class checkin_mod(QWidget):
             self.set_name = set(face_names)
             #self.set_names = tuple(self.set_name)
             self.recordresult()
-            left_days, left_time = self.left_time(self.set_checkin)
-            print(left_time,self.time_section)
-            if left_time > self.time_section:
-                break
         self.cap.release()
-        self.ui.label.clear()
-        self.ui.start.setText('开始考勤')
-        self.checkin_over()
-    def checkin_over(self):
-        face, cur = connectsql()
-        _translate = QtCore.QCoreApplication.translate
-        sql = '''SELECT number,name,other FROM insiders WHERE number NOT IN (
-                        SELECT number FROM checkin where DATE_FORMAT(
-                        datetime,'%Y-%m-%d %H:%i:%s') BETWEEN'{a}'and'{b}')'''.format(
-            a=self.start_time, b=self.set_checkin)
-        cur.execute(sql)
-        belate_person = cur.fetchall()
-        closesql(face, cur)
-        rows = len(belate_person)
-        self.ui.belate_table.setRowCount(rows)
-        for i in range(rows):
-            item = QtWidgets.QTableWidgetItem()
-            self.ui.belate_table.setVerticalHeaderItem(i, item)
-            item = self.ui.belate_table.verticalHeaderItem(i)
-            item.setText(_translate("checkin", str(i + 1)))
-        x = 0
-        for i in belate_person:
-            y = 0
-            for j in i:
-                self.ui.belate_table.setItem(x, y, QtWidgets.QTableWidgetItem(str(belate_person[x][y])))
-                y = y + 1
-            self.ui.belate_table.setItem(x, y, QtWidgets.QTableWidgetItem('未到'))
-            x = x + 1
-        all_checkperson, count = select_table_section('checkin', self.start_time, self.set_checkin)
-        all_person=rows+count
-        self.ui.display.setText('应到：%d名，实到：%d名，未到：%d名。'%(all_person, count, rows))
-        self.warn = Ui_warn('考勤结束！')
-        self.warn.setWindowModality(Qt.ApplicationModal)
-        self.warn.show()
     def recordresult(self):
         if self.set_name.issubset(self.record_name):  # 如果self.set_names是self.record_names 的子集返回ture
             pass  # record_name是要写进数据库中的名字信息 set_name是从摄像头中读出人脸的tuple形式
@@ -183,59 +113,46 @@ class checkin_mod(QWidget):
             self.write_data = tuple(self.different_name)
             names_num = len(self.write_data)
             if names_num > 0 :
-                exist = whether_or_not('insiders', 'number', self.write_data[0])
                 outsider = whether_or_not('externals', 'number', self.write_data[0])
-                visitor = whether_or_not('visitors', 'number', self.write_data[0])
-                if exist == 1 :
+                visitor = exsit_or_not('visitors', self.write_data[0])
+                insider = exsit_or_not('gooutperson', self.write_data[0])
+                if insider or outsider == 1 or visitor:
+                    if insider:
+                        other='本单位人员'
+                        table_name='insiders'
+                    elif outsider == 1:
+                        other='外单位人员'
+                        table_name = 'externals'
+                    elif visitor:
+                        other='来访人员'
+                        table_name = 'visitors'
                     face, cur = connectsql()
-                    other = '已签到'
-                    checkin_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    goout_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     try:
-                        sql = "SELECT number,name FROM insiders WHERE number ='%s'" % (self.write_data[0])
+                        sql = "SELECT number,name FROM %s WHERE number ='%s'" % (table_name, self.write_data[0])
                         cur.execute(sql)
-                        checkin_person = cur.fetchone()
-                        insert_sql = "insert into checkin values {condition}".format(
-                            condition=(checkin_person[0], checkin_person[1], checkin_time, other))
+                        goout_person = cur.fetchone()
+                        insert_sql = "insert into goout values {condition}".format(
+                            condition=(goout_person[0], goout_person[1], goout_time, other))
                         cur.execute(insert_sql)
                         face.commit()
-                        self.show_checkinperson()
+                        self.warn = Ui_warn('请 %s 通过！' % (goout_person[1]))
+                        self.warn.setWindowModality(Qt.ApplicationModal)
+                        self.warn.show()
+                        QtCore.QTimer().singleShot(2000, self.warn.close)
                     except:
                         face.rollback()
                         self.warn = Ui_warn('验证失败，请检查连接！')
                         self.warn.setWindowModality(Qt.ApplicationModal)
                         self.warn.show()
                     closesql(face, cur)
-                elif outsider == 1 or visitor == 1 :
-                    self.warn = Ui_warn('编号：%s\n非本单位人员！'%(str(self.write_data[0])))
-                    self.warn.setWindowModality(Qt.ApplicationModal)
-                    self.warn.show()
-                    QtCore.QTimer().singleShot(2000, self.warn.close)
-    def show_checkinperson(self):
-        self.ui.display_table.setRowCount(0)
-        _translate = QtCore.QCoreApplication.translate
-        face, cur = connectsql()
-        all_checkperson, rows= select_table_section('checkin', self.start_time, self.set_checkin)
-        self.ui.display_table.setRowCount(rows)
-        for i in range(rows):
-            item = QtWidgets.QTableWidgetItem()
-            self.ui.display_table.setVerticalHeaderItem(i, item)
-            item = self.ui.display_table.verticalHeaderItem(i)
-            item.setText(_translate("checkin", str(i + 1)))
-        # 遍历二维元组, 显示到界面表格上
-        x = 0
-        for i in all_checkperson:
-            y = 0
-            for j in i:
-                self.ui.display_table.setItem(x, y, QtWidgets.QTableWidgetItem(str(all_checkperson[x][y])))
-                y = y + 1
-            x = x + 1
-        closesql(face, cur)
     def closeEvent(self, QCloseEvent):
         self.cap.release()
         self.close()
 
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    test_import = checkin_mod()
-    test_import.show()  # 最大化显示
+    test_import = comein_mod()
+    test_import.show()
     sys.exit(app.exec_())

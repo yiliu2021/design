@@ -14,9 +14,23 @@ from setting import set_mod
 sys.path.append('checkinmodule\\')
 from checkin import checkin_mod
 
+sys.path.append('comeinmodule\\')
+from comein import comein_mod
+
+sys.path.append('gooutmodule\\')
+from goout import goout_mod
+
+sys.path.append('visitmodule\\')
+from visitor import visitor_mod
+
+sys.path.append('searchmodule\\')
+from search import inquire_mod
+
 #考虑主程序、登录界面、提示框不涉及功能执行，这三个文件界面和功能通过单独一个类实现
 class Ui_Form(QWidget):
     setusername = pyqtSignal(str)
+    start_comein = pyqtSignal(str)
+    start_goout = pyqtSignal(str)
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -24,18 +38,27 @@ class Ui_Form(QWidget):
         self.setting=set_mod()
         self.logo=Ui_logoin()
         self.checkin=checkin_mod()
+        self.comein=comein_mod()
+        self.visitor=visitor_mod()
+        self.goouter=goout_mod()
+        self.inquire=inquire_mod()
 
         self.logo.Signal_parp.connect(self.tosetting)
+        self.setusername.connect(self.setting.deal_emit_slot)
+        self.start_comein.connect(self.comein.comein_fun)
+        self.start_goout.connect(self.goouter.goout_fun)
         self.setbutton.clicked.connect(self.logoinstart)
         self.checkingin.clicked.connect(self.tocheckin)
+        self.entrance.clicked.connect(self.tocomein)
+        self.goout.clicked.connect(self.togoout)
+        self.visit.clicked.connect(self.tovisit)
+        self.selectbutton.clicked.connect(self.toinquire)
 
         self.closebutton.clicked.connect(self.close)  #关闭窗口
         self.minbutton.clicked.connect(self.showMinimized)  #最小化窗口
         timer = QTimer(self)
         timer.timeout.connect(self.showTimeText)
         timer.start()
-        self.setusername.connect(self.setting.deal_emit_slot)
-
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(600, 400)
@@ -248,7 +271,6 @@ class Ui_Form(QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "智慧营区"))
@@ -258,11 +280,9 @@ class Ui_Form(QWidget):
         self.visit_2.setText(_translate("Form", "宾客来访"))
         self.goout_2.setText(_translate("Form", "外出门禁"))
         self.select_2.setText(_translate("Form", "查询"))
-
     def logoinstart(self):
         self.logo.setWindowModality(Qt.ApplicationModal)
         self.logo.show()
-
     def tosetting(self,user):
         self.setusername.emit(user)
         self.setting.setWindowModality(Qt.ApplicationModal)
@@ -270,8 +290,20 @@ class Ui_Form(QWidget):
     def tocheckin(self):
         self.checkin.setWindowModality(Qt.ApplicationModal)
         self.checkin.showMaximized()
-
-
+    def tocomein(self):
+        self.comein.setWindowModality(Qt.ApplicationModal)
+        self.comein.showMaximized()
+        self.start_comein.emit('comein')
+    def togoout(self):
+        self.goouter.setWindowModality(Qt.ApplicationModal)
+        self.goouter.showMaximized()
+        self.start_goout.emit('goout')
+    def tovisit(self):
+        self.visitor.setWindowModality(Qt.ApplicationModal)
+        self.visitor.show()
+    def toinquire(self):
+        self.inquire.setWindowModality(Qt.ApplicationModal)
+        self.inquire.show()
     def showTimeText(self):
         # 设置宽度
         self.label_time.setFixedWidth(220)
@@ -281,19 +313,16 @@ class Ui_Form(QWidget):
             "QLabel{color:rgb(300,300,300,120); font-size:14px; font-weight:bold; font-family:宋体;}")
         datetime = QDateTime.currentDateTime().toString("yyyy-MM-dd  hh:mm:ss  ddd")
         self.label_time.setText(datetime)
-
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.m_flag = True
             self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
             event.accept()
             self.setCursor(QCursor(Qt.OpenHandCursor))  # 更改鼠标图标
-
     def mouseMoveEvent(self, QMouseEvent):
         if Qt.LeftButton and self.m_flag:
             self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
             QMouseEvent.accept()
-
     def mouseReleaseEvent(self, QMouseEvent):
         self.m_flag = False
         self.setCursor(QCursor(Qt.ArrowCursor))

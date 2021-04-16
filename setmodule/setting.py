@@ -11,6 +11,7 @@ from warnning import Ui_warn
 from mysqlload import *
 from GeneratorModel import *
 from datetime import datetime, timedelta
+import threading
 
 class set_mod(QWidget):
     def __init__(self):
@@ -86,11 +87,12 @@ class set_mod(QWidget):
             person_sex = '女'
         insider=whether_or_not('insiders','number',person_num)
         outsider=whether_or_not('externals','number',person_num)
+        visitor=whether_or_not('visitors','number',person_num)
         if person_num == '' or person_name == '' :
             self.warn = Ui_warn('请完善信息！')
             self.warn.setWindowModality(Qt.ApplicationModal)
             self.warn.show()
-        elif insider!=1 and outsider!=1:
+        elif insider!=1 and outsider!=1 and visitor!=1:
             face, cur = connectsql()
             try:
                 sql = "INSERT INTO %s VALUES ('%s','%s','%s','%s')"%(
@@ -122,10 +124,14 @@ class set_mod(QWidget):
                 self.warn = Ui_warn('开始采集编号\n'+self.num_text+'图像！')
                 self.warn.setWindowModality(Qt.ApplicationModal)
                 self.warn.show()
+                QtCore.QTimer().singleShot(2000, self.warn.close)
                 self.cap.open(self.url)
-                self.showCapture()
+                t1 = threading.Thread(target=self.showCapture, args=())
+                t1.setDaemon(True)
+                t1.start()
+                #self.showCapture()
             else:
-                self.warn = Ui_warn('请输入采集人员编号！')
+                self.warn = Ui_warn('请输入有效编号！')
                 self.warn.setWindowModality(Qt.ApplicationModal)
                 self.warn.show()
         elif flagCam == True:
@@ -140,16 +146,18 @@ class set_mod(QWidget):
         # 循环来自视频文件流的帧
         while self.cap.isOpened():
             ret, frame = self.cap.read()
-            frame1 = imutils.resize(frame, width=500)
+            frame = imutils.resize(frame, width=500)
             QApplication.processEvents()
-            rects = detector.detectMultiScale(cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY), 1.02, 5)
-            for x, y, w, h in rects:
-                cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                frame2 = cv2.putText(frame1, "Have token {}/20 face".format(self.photos),
-                                     (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,(200, 100, 50), 2)
+            rects = detector.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY),
+                                              scaleFactor=1.02, minNeighbors=5, minSize=(30, 30))
+            if len(rects) > 0: # 大于0则检测到人脸
+                for x, y, w, h in rects:
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    frame = cv2.putText(frame, "Have token {}/20 face".format(self.photos),
+                                         (50, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (200, 100, 50), 2)
 
             # 显示输出框架
-            show_video = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
+            show_video = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # 这里指的是显示原图
             # opencv读取图片的样式，不能通过Qlabel进行显示，需要转换为Qimage。
             # QImage(uchar * data, int width, int height, int bytesPerLine, Format format)
             self.showImage = QImage(show_video.data, show_video.shape[1], show_video.shape[0], QImage.Format_RGB888)
@@ -537,6 +545,9 @@ class set_mod(QWidget):
         self.ui.manageuser.clear()
         self.ui.userpass.clear()
         self.ui.userpass_2.clear()
+    def closeEvent(self, QCloseEvent):
+        self.cap.release()
+        self.close()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
